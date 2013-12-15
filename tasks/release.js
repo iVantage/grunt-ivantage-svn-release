@@ -13,15 +13,32 @@ module.exports = function(grunt) {
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
-  grunt.registerTask('release', 'Pulls it all together, bump, changelogs, tag, ...', function() {
-    // Merge task-specific and/or target-specific options with these defaults.
+  var sh = require('shelljs');
 
-    // TODO massage the config for our changelog settings
-    // - Check for local modifications?
-    // - Destination
-    //   - Need new version number
-    // - revFrom
-    // - Warn if there's no changeset url
+  var validateEnv = function() {
+    // We need the svn command line tools
+    if(!sh.which('svn')) {
+      grunt.fail.fatal('Task "release" requires svn command line tools');
+    }
+
+    // Old versions of svn put `.svn` dirs in every subdir
+    var svnVersion = sh.exec('svn --version', {silent: true}).output.split('.');
+    if(svnVersion.length < 3) {
+      grunt.fail.fatal('Task "release" could not parse your svn version number');
+    }
+
+    if(svnVersion[0] < 1 || svnVersion[0] === 1 && svnVersion[1] < 7) {
+      grunt.fail.fatal('Task "release" requires svn version 1.7.0 or greater');
+    }
+
+    // We must be at the repo root - check for the `.svn` folder
+    if(sh.test('-d', '.svn')) {
+      grunt.fail.fatal('Task "release" must be run from project root');
+    }
+  };
+
+  grunt.registerTask('release', 'Pulls it all together, bump, changelogs, tag, ...', function() {
+    validateEnv();
 
     // Update JSON files
     grunt.task.run([
@@ -33,8 +50,7 @@ module.exports = function(grunt) {
 
     var logConf = grunt.config.get('ivantage_svn_changelog') || {}
       , logTargets = Object.keys(logConf);
-    console.log(logTargets);
-    
+
     if(!logTargets.length) {
       grunt.config.set('ivantage_svn_changelog', {
         internal: {
