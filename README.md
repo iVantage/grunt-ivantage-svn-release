@@ -40,7 +40,7 @@ grunt release:minor:prerelease
 Using
 [grunt-ivantage-svn-changelog](https://github.com/iVantage/grunt-ivantage-svn-changelog)
 we crank out a changelog for everything since the previous (semver) tagged
-version. These will be saved to `./changelog/CHANGELOG-<new-version>.md`
+version. These will be saved to `./changelogs/CHANGELOG-<new-version>.md`
 by default but will honor config settings in your gruntfile for that task.
 
 #### The Tag
