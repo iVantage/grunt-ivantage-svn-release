@@ -56,11 +56,10 @@ module.exports = function(grunt) {
       grunt.fail.fatal('Task "release" must be run from project root');
     }
 
-    console.log('Hey - you are not checking for local modifications');
     // There must be no local modifications
-    //if(run('svn status', true).output.length > 0) {
-    //  grunt.fail.warn('Task "release" detected modifications in your working copy');
-    //}
+    if(run('svn status', true).output.length > 0) {
+      grunt.fail.warn('Task "release" detected modifications in your working copy');
+    }
   };
 
   grunt.registerTask('_release_prep_changelogs', 'Private helper task for "release"', function() {
