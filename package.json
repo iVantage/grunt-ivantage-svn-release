@@ -35,8 +35,8 @@
   "peerDependencies": {
     "grunt": "~0.4.2",
     "grunt-svn-bump": "~0.2.0",
-    "grunt-ivantage-svn-changelog": "https://github.com/iVantage/grunt-ivantage-svn-changelog.git",
-    "grunt-svn-tag": "https://github.com/iVantage/grunt-svn-tag.git"
+    "grunt-ivantage-svn-changelog": "~0.3.0",
+    "grunt-svn-tag": "~0.1.2"
   },
   "keywords": [
     "gruntplugin"
