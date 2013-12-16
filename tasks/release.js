@@ -15,6 +15,26 @@ module.exports = function(grunt) {
 
   var sh = require('shelljs');
 
+  var run = function(cmd, force) {
+    force = force || false;
+    if(grunt.option('dry-run') && !force) {
+      console.log('Not running: ' + cmd);
+      return {
+        code: 0,
+        output: ''
+      };
+    } else {
+      return sh.exec(cmd, {silent: true});
+    }
+  };
+
+  var getSvnVersionNumber = function() {
+    var cmd = run('svn --version', true)
+      , lines = cmd.output.split(/\r?\n/)
+      , matches = /\s(\d+)\.(\d+)\.(\d+)\s/.exec(lines[0]);
+    return matches ? {major: matches[1], minor: matches[2], patch: matches[3]} : null;
+  };
+
   var validateEnv = function() {
     // We need the svn command line tools
     if(!sh.which('svn')) {
@@ -22,34 +42,28 @@ module.exports = function(grunt) {
     }
 
     // Old versions of svn put `.svn` dirs in every subdir
-    var svnVersion = sh.exec('svn --version', {silent: true}).output.split('.');
-    if(svnVersion.length < 3) {
+    var svnVersion = getSvnVersionNumber();
+    if(!svnVersion) {
       grunt.fail.fatal('Task "release" could not parse your svn version number');
     }
 
-    if(svnVersion[0] < 1 || svnVersion[0] === 1 && svnVersion[1] < 7) {
+    if(svnVersion.major < 1 || svnVersion.major === 1 && svnVersion.minor < 7) {
       grunt.fail.fatal('Task "release" requires svn version 1.7.0 or greater');
     }
 
     // We must be at the repo root - check for the `.svn` folder
-    if(sh.test('-d', '.svn')) {
+    if(!sh.test('-d', '.svn')) {
       grunt.fail.fatal('Task "release" must be run from project root');
     }
 
+    console.log('Hey - you are not checking for local modifications');
     // There must be no local modifications
-    if(sh.exec('svn status', {silent: true}).output.length > 0) {
-      grunt.fail.warn('Task "release" detected modifications in your working copy');
-    }
+    //if(run('svn status', true).output.length > 0) {
+    //  grunt.fail.warn('Task "release" detected modifications in your working copy');
+    //}
   };
 
-  grunt.registerTask('release', 'Pulls it all together, bump, changelogs, tag, ...', function() {
-    validateEnv();
-
-    // Update JSON files
-    grunt.task.run([
-      'svn_bump' + this.args.length ? ':' + this.args.join(':') : ''
-    ]);
-
+  grunt.registerTask('_release_prep_changelogs', 'Private helper task for "release"', function() {
     // Add config entry for *new* package.json
     var pkg = grunt.file.readJSON('package.json');
 
@@ -60,16 +74,22 @@ module.exports = function(grunt) {
       grunt.config.set('ivantage_svn_changelog', {
         internal: {
           options: {
-            outFile: 'changelog/CHANGELOG-' + pkg.version + '.md',
+            outFile: 'changelogs/CHANGELOG-' + pkg.version + '.md',
             changesetUrl: 'https://ivantage.beanstalkapp.com/' + pkg.name + '/changesets/{{revision}}',
             revFrom: 'LAST_SEMVER_TAG'
           }
         }
       });
     }
+  });
 
-    // Changelogs and commits
+  grunt.registerTask('release', 'Pulls it all together, bump, changelogs, tag, ...', function() {
+    validateEnv();
+
+    // Update JSON files
     grunt.task.run([
+      'bump' + (this.args.length ? ':' + this.args.join(':') : ''),
+      '_release_prep_changelogs',
       'ivantage_svn_changelog',
       'svn_tag'
     ]);
