@@ -31,7 +31,7 @@ module.exports = function(grunt) {
   var getSvnVersionNumber = function() {
     var cmd = run('svn --version', true)
       , lines = cmd.output.split(/\r?\n/)
-      , matches = /\s(\d+)\.(\d+)\.(\d+)\s/.exec(lines[0]);
+      , matches = /\s(\d+)\.(\d+)\.(\d+)[\s-]/.exec(lines[0]);
     return matches ? {major: matches[1], minor: matches[2], patch: matches[3]} : null;
   };
 
