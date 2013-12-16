@@ -35,6 +35,11 @@ module.exports = function(grunt) {
     if(sh.test('-d', '.svn')) {
       grunt.fail.fatal('Task "release" must be run from project root');
     }
+
+    // There must be no local modifications
+    if(sh.exec('svn status', {silent: true}).output.length > 0) {
+      grunt.fail.warn('Task "release" detected modifications in your working copy');
+    }
   };
 
   grunt.registerTask('release', 'Pulls it all together, bump, changelogs, tag, ...', function() {
@@ -56,7 +61,7 @@ module.exports = function(grunt) {
         internal: {
           options: {
             outFile: 'changelog/CHANGELOG-' + pkg.version + '.md',
-            changesetUrl: '#' + pkg.version,
+            changesetUrl: 'https://ivantage.beanstalkapp.com/' + pkg.name + '/changesets/{{revision}}',
             revFrom: 'LAST_SEMVER_TAG'
           }
         }
