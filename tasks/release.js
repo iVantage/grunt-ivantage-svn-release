@@ -60,7 +60,12 @@ module.exports = function(grunt) {
     if(run('svn status', true).output.length > 0) {
       grunt.fail.warn('Task "release" detected modifications in your working copy');
     }
+
   };
+
+  grunt.loadNpmTasks('grunt-svn-bump');
+  grunt.loadNpmTasks('grunt-ivantage-svn-changelog');
+  grunt.loadNpmTasks('grunt-svn-tag');
 
   grunt.registerTask('_release_prep_changelogs', 'Private helper task for "release"', function() {
     // Add config entry for *new* package.json
