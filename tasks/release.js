@@ -56,8 +56,9 @@ module.exports = function(grunt) {
       grunt.fail.fatal('Task "release" must be run from project root');
     }
 
-    // There must be no local modifications
-    if(run('svn status', true).output.length > 0) {
+    // There must be no local modifications. We don't care abount unversioned
+    // files or externals
+    if(run('svn status -q', true).output.length > 0) {
       grunt.fail.warn('Task "release" detected modifications in your working copy');
     }
 
