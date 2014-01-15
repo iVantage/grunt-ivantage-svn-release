@@ -54,4 +54,5 @@ Add unit tests for any new or changed functionality. Lint and test your code
 using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+
+01-15-2014 v0.2.4 Ignore externals and unversioned files
