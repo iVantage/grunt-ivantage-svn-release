@@ -93,7 +93,7 @@ module.exports = function(grunt) {
 
     // Update JSON files
     grunt.task.run([
-      'bump' + (this.args.length ? ':' + this.args.join(':') : ''),
+      'bump' + (this.args.length ? ':' + this.args.join(':') : 'patch'),
       '_release_prep_changelogs',
       'ivantage_svn_changelog',
       'svn_tag'
