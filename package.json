@@ -1,7 +1,7 @@
 {
   "name": "grunt-ivantage-svn-release",
   "description": "Pulls it all together, bump, changelogs, tag, ...",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "homepage": "https://github.com/iVantage/grunt-ivantage-svn-release",
   "author": {
     "name": "jtrussell",
