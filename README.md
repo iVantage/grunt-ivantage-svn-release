@@ -43,6 +43,13 @@ we crank out a changelog for everything since the previous (semver) tagged
 version. These will be saved to `./changelogs/CHANGELOG-<new-version>.md`
 by default but will honor config settings in your gruntfile for that task.
 
+#### The Release Notes
+Using the
+[grunt-ivantage-trello-release-notes](https://github.com/iVantage/grunt-ivantage-trello-release-notes)
+task we can put together release notes from user stores in a Trello board. This
+step will only be run if you have an `ivantage_trello_release` section in your
+grunt config.
+
 #### The Tag
 
 Finally [grunt-svn-tag](https://github.com/iVantage/grunt-svn-tag.git) closes

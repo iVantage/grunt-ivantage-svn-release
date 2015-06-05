@@ -91,13 +91,21 @@ module.exports = function(grunt) {
   grunt.registerTask('release', 'Pulls it all together, bump, changelogs, tag, ...', function() {
     validateEnv();
 
-    // Update JSON files
-    grunt.task.run([
+    var tasksToRun = [
       'bump' + (this.args.length ? ':' + this.args.join(':') : 'patch'),
       '_release_prep_changelogs',
       'ivantage_svn_changelog',
-      'svn_tag'
-    ]);
+    ];
+
+    // Queue up the release notes task too if present
+    if(grunt.config.get('ivantage_trello_release')) {
+      tasksToRun.push('ivantage_trello_release');
+    }
+
+    tasksToRun.push('svn_tag');
+
+    // Update JSON files
+    grunt.task.run(tasksToRun);
 
   });
 
