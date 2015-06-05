@@ -62,4 +62,5 @@ using [Grunt](http://gruntjs.com/).
 
 ## Release History
 
+06-05-2015 v0.5.0 Run release notes task if present
 01-15-2014 v0.2.4 Ignore externals and unversioned files
