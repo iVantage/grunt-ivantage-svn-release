@@ -34,9 +34,9 @@
   },
   "peerDependencies": {
     "grunt": "~0.4.2",
-    "grunt-svn-bump": "~0.2.1",
-    "grunt-ivantage-svn-changelog": "~0.4.1",
-    "grunt-svn-tag": "~0.5.1"
+    "grunt-svn-bump": "^0.2.1",
+    "grunt-ivantage-svn-changelog": "^0.4.1",
+    "grunt-svn-tag": "^0.7.1"
   },
   "keywords": [
     "gruntplugin"
