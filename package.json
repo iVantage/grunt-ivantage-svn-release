@@ -33,7 +33,7 @@
     "grunt": "~0.4.2"
   },
   "peerDependencies": {
-    "grunt": "~0.4.2",
+    "grunt": ">=0.4.0",
     "grunt-svn-bump": "^0.2.1",
     "grunt-ivantage-svn-changelog": "^0.4.1",
     "grunt-svn-tag": "^0.7.1"
